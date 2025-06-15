@@ -1,0 +1,103 @@
+---
+title: "\"Exploración de Datos - Stroke Prediction\""
+author: "Edinson Cespedes"
+date: "2025-06-13"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introducción
+
+Este documento presenta una exploración inicial del dataset utilizado para predecir la ocurrencia de un stroke (derrame cerebral). Se incluyen estadísticas descriptivas, visualizaciones y observaciones relevantes que ayudarán a entender mejor la estructura y posibles relaciones entre variables.
+
+## Cargar librerías y datos
+
+```{r}
+library(tidyverse)
+library(skimr)
+library(ggplot2)
+library(corrplot)
+
+stroke_data <- read.csv("stroke.csv")
+
+stroke_data <- stroke_data %>%
+  mutate(
+    gender = as.factor(gender),
+    ever_married = as.factor(ever_married),
+    work_type = as.factor(work_type),
+    Residence_type = as.factor(Residence_type),
+    smoking_status = as.factor(smoking_status),
+    stroke = as.factor(stroke)
+  )
+```
+
+## Estadísticas descriptivas
+
+```{r}
+skim(stroke_data)
+```
+
+## Frecuencias de variables categóricas
+
+```{r}
+stroke_data %>%
+  select(gender, ever_married, work_type, Residence_type, smoking_status, stroke) %>%
+  map(~ table(.))
+```
+
+## Visualización de distribuciones
+
+```{r}
+# Edad
+ggplot(stroke_data, aes(x = age)) +
+  geom_histogram(bins = 30, fill = "steelblue") +
+  labs(title = "Distribución de Edad")
+
+# BMI
+ggplot(stroke_data, aes(x = bmi)) +
+  geom_histogram(bins = 30, fill = "tomato") +
+  labs(title = "Distribución de BMI")
+```
+
+## Boxplots según la variable objetivo
+
+```{r}
+# Edad vs stroke
+ggplot(stroke_data, aes(x = stroke, y = age, fill = stroke)) +
+  geom_boxplot() +
+  labs(title = "Edad por Stroke")
+
+# Glucosa vs stroke
+ggplot(stroke_data, aes(x = stroke, y = avg_glucose_level, fill = stroke)) +
+  geom_boxplot() +
+  labs(title = "Nivel de Glucosa por Stroke")
+```
+
+## Matriz de correlación entre variables numéricas
+
+```{r}
+numeric_vars <- stroke_data %>%
+  select(where(is.numeric))
+
+cor_matrix <- cor(numeric_vars, use = "complete.obs")
+corrplot(cor_matrix, method = "circle", type = "upper", tl.col = "black")
+```
+
+## Insights principales
+
+- **Edad**, **BMI** y el **riesgo combinado** (`hypertension + heart_disease`) presentan una **correlación positiva moderada**.
+- La variable objetivo **'stroke'** podría estar relacionada con estas variables.
+- Es posible que factores como **estado civil** y **estado de tabaquismo** también estén asociados con la ocurrencia de un stroke.
