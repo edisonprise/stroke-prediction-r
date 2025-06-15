@@ -1,0 +1,138 @@
+---
+title: "Build and deploy a stroke prediction model using R"
+date: "`r Sys.Date()`"
+output: html_document
+author: "Edinson Cespedes"
+---
+
+# About Data Analysis Report
+
+This RMarkdown file contains the report of the data analysis done for the project on building and deploying a stroke prediction model in R. It contains analysis such as data exploration, summary statistics and building the prediction models. The final report was completed on `r date()`. 
+
+**Data Description:**
+
+According to the World Health Organization (WHO) stroke is the 2nd leading cause of death globally, responsible for approximately 11% of total deaths.
+
+This data set is used to predict whether a patient is likely to get stroke based on the input parameters like gender, age, various diseases, and smoking status. Each row in the data provides relevant information about the patient.
+
+
+# Task One: Import data and data preprocessing
+
+getwd()
+list.files()
+setwd("Build-deploy-stroke-prediction-model-R")
+list.files()
+
+
+stroke_data <- read.csv("stroke.csv")
+head(stroke_data)
+
+str(stroke_data)
+summary(stroke_data)
+
+source("01_clean_data.R")
+source("02_impute_missing.R")
+
+## Load data and install packages
+
+```{r}
+install.packages("caret")
+
+library(caret)
+
+stroke_data$stroke <- as.factor(stroke_data$stroke)
+levels(stroke_data$stroke)  # Deberías ver: "0" "1"
+
+if (!requireNamespace("caret", quietly = TRUE)) {
+  install.packages("caret")
+}
+library(caret)
+
+source("03_transform_data.R")
+
+sum(is.na(stroke_data$bmi))
+
+colSums(is.na(stroke_data))
+
+
+```
+
+
+## Describe and explore the data
+
+```{r}
+source("04_feature_engineering.R")
+source("05_eda_stroke.R")
+source("06_explore_data.R")
+```
+
+
+
+# Task Two: Build prediction models
+
+```{r}
+source("02_recipe.R")
+source("03_model_stroke.R")
+source("04_evaluate_cv.R")
+source("05_evaluate_test.R")
+source("06_interpret_results.R")
+```
+
+
+
+
+# Task Three: Evaluate and select prediction models
+
+```{r}
+final_fit.rds
+log_reg_tune.rds
+rf_tune
+```
+
+
+
+# Task Four: Deploy the prediction model
+
+```{r}
+source("../3rd Part deployment/07_save_model.R")
+source("../3rd Part deployment/08_app_stroke.R")
+shinyApp(ui = ui, server = server)
+```
+
+
+
+
+# Task Five: Findings and Conclusions
+conclusion_es.md
+conclusion_en.md
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
