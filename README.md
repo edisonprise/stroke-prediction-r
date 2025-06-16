@@ -38,7 +38,7 @@ El conjunto de datos fue tomado de Kaggle.
 
 ## 🌐 Live App
 
-👉 [Click here to use the Stroke Prediction App](https://usuario.shinyapps.io/stroke-prediction/)  
+👉 [Click here to use the Stroke Prediction App]( https://ejdiq9-edison-cespedes.shinyapps.io/stroke-prediction/)  
 ⬅️ Replace this URL with the actual one after deployment.
 
 ---
